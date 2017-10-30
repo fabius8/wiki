@@ -1,0 +1,2 @@
+
+> Once you’ve staked your Ether (ETH), you no longer have access to it as long as you’re mining. Ethereum has mentioned a proposed minimum and maximum amount of Ether a validator could stake (e.g. - 1,500 ETH to 60,000 ETH.) The more you stake, the better your chance of solving a block. 

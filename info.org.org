@@ -1,0 +1,601 @@
+```
+#+TITLE INFO
+* URL
+https://hrportal.alcatel-sbell.com.cn/DefaultLogin_V2.aspx
+zhengf
+
+* Remote Host PC
+IP：135.251.228.199
+User：fangzheng
+Password: 123456
+
+ips password 7779
+
+BCM CSP page is now change to :
+https://www.broadcom.com/mybroadcom/
+=>  Customer Support Portal => Issue Management and Knowledge Base
+
+The original account and passwd with my email address is still valid.
+wei.h.yan@alcatel-sbell.com.cn  1234qwerQWER 
+
+135.251.195.219 
+端口：2006 
+
+** Hemin
+IP：135.251.228.201
+hemin
+dont5get
+
+* INFO
+** serial option
+baud rate: 115200
+data bits: 8
+parity: none
+stop bits: 1
+
+** 局端登陆
+OLT   135.251.195.177
+      isadmin
+      isamcli!
+** ONT登陆
+Username: ONTUSER
+Password: SUGAR2A041
+
+** wiki
+http://135.251.228.99/wiki
+** How to set up the testing platform used to receive packets at Lan0 from PC
+
+// enable ic debug
+bs /b/c system cfg={ic_dbg_stats=yes}
+
+bs /bdmf/link port/index=wan0 bridge/index=0     
+
+bs /b/d egress_tm/dir=us,index=1
+bs /bdmf/new egress_tm/dir=us,index=1,level=queue,mode=sp tcont/index=1
+bs /bdmf/configure egress_tm/dir=us,index=1 queue_cfg[0]={drop_threshold=2000,queue_id=0}
+
+// 00:0e:c6:c5:b3:a3 varies, it depends on the PC you will use
+bs /bdmf/configure bridge/index=0 mac[{mac=00:0e:c6:c5:b3:a3}]={ports=lan0,sal_action=forward,dal_action=forward}
+// 00:11:22:33:44:81 is WAN0’s mac address
+bs /bdmf/configure bridge/index=0 mac[{mac=00:11:22:33:44:81}]={ports=wan0,sal_action=forward,dal_action=forward}
+
+bs /bdmf/new gem/index=30,flow_type=ethernet,gem_port=300,us_cfg={tcont={tcont/index=1}},ds_cfg={discard_prty=low,destination=eth}
+
+bs /bdmf/new ingress_class/dir=us,cfg={type=flow,fields=ingress_port+outer_vid,prty=5}
+bs /bdmf/new ingress_class/dir=ds,cfg={type=flow,fields=ingress_port+outer_vid,prty=4}
+
+bs /bdmf/new vlan_action/dir=us,index=0,action={cmd=replace,ovid=100,opbit=0,otpid=0}
+bs /bdmf/new vlan_action/dir=ds,index=0,action={cmd=replace,ovid=200,opbit=0,otpid=0}   ???
+
+bs /bdmf/attr/add ingress_class/dir=us,index=0 flow string key={ingress_port=lan0,outer_vid=1000},result={qos_method=flow,action=forward,forw_mode=flow,egress_port=wan0,wan_flow=30}
+** 编译
+172.24.213.171
+zhengf soup.358
+
+Review Board
+zhengf
+chicory123!@#
+
+CQ clearQuest
+zheng FANG
+
+
+cd build/brcm
+make ASB_PLATFORM=brcm voip=no AONT_VOIP=n ONT_TYPE=xg250wxa
+ TOP_DIR='/repo_aont12/qianqiax/'HD_R56_FDT1256
+红字部分改成自己的目录.
+** post-review
+NEW: ALU02346324
+      ALU02330093
+      hg pull –u
+      hg ci -m "IR ALU02236983:modify fcache dev  number for 416L04"  rootfs/brcm/fs.src/common/usr/cfg/dev.cfg  -u qianqiax
+      post-review  --target-people=jianchep,qianqiax  --bugs-closed=ALU02230093  -p
+      hg push
+
+note: hg pull –u 为了保证自己的代码库pull到最新的changetset，才能push
+     hg ci是将自己的代码放到临时库上，ci之后，如果发现代码有问题，想先退回来，用hg rollback；
+     hg ci 需要FR或者对应的IR号上传，目前先用IR ALU02236983
+     post-review 发出review邀请，只有在网页上review->ship it->submit之后，才能push
+     hg push 如果没有成功，如果是因为多头的情况，需要先rollback，重新pull和ci，再push.
+
+     出现人名的地方全部都是CSL，如果写错，会不成功。
+     
+hg log -r 62 -p
+
+hg import --no-commit patch2.diff
+
+
+注意以上提交代码都是在FDT库里提交的过程，比如HD_R56_FDT1256库
+如果提交的代码是SDK的库（如BCMSDKv502L02）或者opensource库里面的内容：
+1.	http://135.251.228.99/ext_repo/ext_repo.php
+在该网址（用火狐或者IE打开）填写信息，把patch上传，由管理员提交
+这个里面有一项是reviewID号，同上一封邮件，也是需要在相应库里先ci和post-review之后，生成一个reviewID号填写。
+2.	SDK库的管理员是shen Peihua, opensource的库管理员是zhang Jianliang 
+3.	网页上生成项之后，要发邮件给相应的管理员，由管理员代为提交代码。
+4.	管理员提交之后会发邮件通知我们，此时在相应的库里，用hg incom命令可以看到，自己的代码已经进到SDK 或者OPENSOURCE，并且有一个changeset号
+5.	在对应文件里修改changeset号把文件修改进到FDT库里。（SDK：XS_BCMSDKv502L02.mk        OPENSOURCE：XS_OPENSOURCE.mk）
+
+注意：SDK和opensource的改动会影响其他板子，要做好注释和隔离，进代码要谨慎，一定要经过review
+
+* Username and Password AD4
+zhengf
+Sq7&!Kt47{
+gaoyajie321#@!
+密码：E%t4pQ9&$2
+
+CIP: T!he3dJo
+Corporate Intranet Login is : Zheng FANG
+* Proxy
+http://cnproxy.cn.alcatel-lucent.com/proxy.pac
+155.132.90.26:8000
+* Learn
+** First Learn
+1. case title 请参考附件中case的名字，比如Test Case Mnemonic：FT_ONU_L2FWD_VLAN_01
+http://135.251.228.99/wiki/index.php/FT_ONU_L2FWD_VLAN_01
+http://135.251.228.99/wiki/index.php/FT_ONU_QOS_QUEUE_04
+http://135.251.228.99/wiki/index.php/FT_ONU_QOS_PBITMARK_14
+
+2. Software_Solution
+http://135.251.228.99/wiki/index.php/Project_aont30#Software_Feasibility_Study
+http://135.251.228.99/wiki/index.php/Software_Solution_Options
+
+3.OLT配置
+附件： test cmd and 7360通用配置手册。 
+4.6858 SFU FS
+附件：SFU FS
+** Second Learn
+1.网页升级：192.168.1.254/upgrade.cgi
+登陆用户名密码查看：cfgcli -e WebAccount.   （注意最后有一个点）
+查找3FE..开头的文件，upgrade
+
+2.版本库地址：
+http://135.251.206.224/IMAGE/HDR56/
+
+3.Broadcom（提CSP用）：
+https://support.broadcom.com/
+用户名密码： Account: wei.h.yan@alcatel-sbell.com.cn Pwd: 1234qwerQWER 
+
+4.weblib地址：（查看文档）
+https://ct.web.alcatel-lucent.com/scm-lib4/index.cgi
+
+** Broadcom l2 config:
+http://135.251.25.50/wiki/index.php/Project_aont30#Typical_L2_configuration_script
+
+** doc url
+http://aww.sh.bel.alcatel.be/metrics/datawarehouse/query/FeatureBinder.cgi?number=3HH-13652-AAAA
+** upgrade
+*** By OLT
+   show equipment ont sw-version
+   show equipment ont interface 1/1/2/2/30 detail
+   show interface port ont:1/1/2/2/30
+   configure equipment ont interface 1/1/2/2/30 sw-ver-pland 3FE...
+   show equipment ont sw-download
+   
+*** By web
+1. get the upgrade image
+2. set local ip 192.168.1.100/24
+3. connect to lan
+4. login web 192.168.1.254
+   adminadmin/ALC#FGU or superadmin/12345
+5. username and password can be got by:
+   cfgcli -g InternetGatewayDevice.X_Authentication.WebAccount.Username 
+   cfgcli -g InternetGatewayDevice.X_Authentication.WebAccount.Password
+   登陆用户名密码查看：cfgcli -e WebAccount.   （注意最后有一个点）
+6. 192.168.1.254/upgrade.cgi
+7. select the file 3FE46346... to upgrade
+   
+*** command
+omcli omciMgr showRSSI
+* HowTO Create Vlan
+//创建用于ONU管理的单层RB VLAN 300，并应用PQ Profile （ingress-qos） PQ0
+configure vlan id 200 mode residential-bridge in-qos-prof-name name:PQ0
+
+//查看配置vlan
+info configure service
+
+* STC IP
+135.251.207.66 port 3/3 3/4
+* 设备
+借裴建成 光模块 1个
+从 LUZHIFEI 领 光模块 一个
+领 1 个xg-020-gxa板子
+借cheng guanglin usb千兆网卡一个
+* daily report
+** 2016.12.30
+Sharing xg240gxa with LIU Antony, after he get board to configure.
+光模块找 LU ZHIFEI
+
+** 2016.01.04
+** 2016.01.09
+板子可以起来了。可以先烧录HD_56.850p111.tar中的3FE46346FFGA50。
+在cfe阶段把boardid选择为XG020GXA，把PartNumber设置为3FE46310AAAA。
+需要注意的是XG020GXA的GE口用普通的网线不能LINK，需要用硬件提供的临时网线，可以找shen fei C。
+** 2016.01.10
+领光模块，去3号楼调整下。
+** 2016.01.11
+Issues/concerns:
+None
+
+Accomplishments of this today:
+1. Try let XG-020-GX device online on OLT.
+
+The technical Summary:
+1. Last week, I share xg240gxa with Antony LIU, watch he get board to setup.
+   I learn how to make equipment upgrades by web, not try in CFE and OLT.
+   Understand the basic commands to check the pon's status and device info.
+   Like `bs /b/e gpon', `omcli omciMgr showRSSI', `cat /etc/buidinfo', etc.
+2. Today, my new ONT board is not in normal which is in o2_3 status.
+   I look for help from XU qiting.
+   At last we find the default serial number was conflict.
+   After we modify serial num, the status goto o5(normal).
+   I got a document from XU about how to sovle this kind of problem.
+
+Task/issue to be worked tomorrow
+1. In order to learn L2 forwarding,
+   I need to learn how to configure in OLT, and how it works in ONU.
+2. Run script in ONU.
+
+Task/issue pending
+
+Plan in the near future
+1. L2 forwarding study
+
+** 2016.01.12
+Issues/concerns:
+None
+
+Accomplishments of this today:
+1. Try upgrade 3FE46346mix001 version on XG-020-GX-A
+2. Register device ON OLT
+3. Configure VLAN on OLT
+4. Use TestCenter run L3 flow to check normal
+
+The technical Summary:
+1. Use `configure equipment ont interface ng2:1/1/5 sernum ALCL:99998888 \
+        sw-ver-pland disable pref-channel-pair 1/1/3/2' to register in OLT:
+   a) Be careful about $interface $sernum, these should be right and unique
+   b) $sw-ver-pland this parameter means disable update version from OLT
+   c) $pref-channel-pair, this parameter I need to figure it out later.
+2. I still has a bit misunderstand fo vlan configure. when I use
+   `configure bridge port ng:1/1/5/1/1 vlan-id 3333 tag single-tagged', I got Error blow:
+   "Error : VLAN MGT error 277 : Attach ingress QoS profile to VLAN port refused due to missing bandwidth profile on queue."
+   I will add this to TODO list and check what I was missing.
+Task/issue to be worked tomorrow
+1. There is someting to leave tommorrow
+
+Task/issue pending
+
+Plan in the near future
+1. Configure VLAN on OLT
+2. Use TestCenter run L3 flow to check normal
+
+** 2017.01.16
+Issues/concerns:
+None
+
+Accomplishments of this today:
+1. Contact HP to repair computer
+2. Learn 7360 FX xPON General Configure(GPON)
+
+The technical Summary:
+1. Continue familiar with the command on GPON data config
+   a) Fix error come from `configure bridge port ng:1/1/5/1/1 vlan-id 3333 tag single-tagged'
+      which brandwidth-profie need to be bind to port
+   b) Have little concept of vpls, Leading understanding of command 'configure service vpls` not deep
+
+Task/issue to be worked tomorrow
+1. Continue familiar with the command on GPON data config
+2. Use TestCenter run L3 flow to check normal
+
+Task/issue pending
+
+Plan in the near future
+1. Use TestCenter run L3 flow to check normal
+
+** 2017.01.17
+Issues/concerns:
+None
+
+Accomplishments of this today:
+1. Read 3FQ-40013-ABAE-TQZZA-01P10-Weblib
+   a) HOWTO use search for strings
+2. In CFE mode, input 'b' set boardid to XG020GXA
+
+The technical Summary:
+1. The XG250WXA code substitutes XG240WXA code, as XG020GXA share firmware
+   with XG240WXA, the CFE parameter about boardid need to be set exactly XG020GXA.
+2. Reference information from LI Qipan to set boardid leading error message.
+   Upgrade the firmware to solve it.
+
+Task/issue to be worked tomorrow
+1. Use TestCenter run L3 flow
+
+Task/issue pending
+
+Plan in the near future
+1. Use TestCenter run L3 flow
+
+** 2017.01.18
+Issues/concerns:
+None
+
+Accomplishments of this today:
+1. 
+2.
+
+The technical Summary:
+1. We will discuss the work we need to do to test the factory side,
+   and discuss whether to test the Layer 2 forwarding.
+   The next step is to do a Layer 2 forwarding test
+
+Task/issue to be worked tomorrow
+1. Use TestCenter run L2 flow
+
+Task/issue pending
+
+Plan in the near future
+1. Use TestCenter run L2 flow
+
+** 2017.01.20
+** 2017.01.23
+*** ERR LOG:
+AONT login: >>>>on_omci_start_io()
+### PVID removed from port 
+** 2017.02.06
+*** ERROR
+[root@AONT: ONTUSER]# >>>>on_omci_complete_io()
+>>>>on_omci_start_io()
+*** 打印最多
+bs /b/e system max_prints:-1
+
+** 2017.02.16
+*** DONE 寻找宏隔离
+    CLOSED: [2017-02-16 Thu 15:00]
+*** DONE commit修改
+    CLOSED: [2017-02-16 Thu 15:00]
+*** TODO field mask 修改gem_flow -> ingress_port
+*** create cscope file
+find . -type f |grep -E "\.c$|\.h$|\.mk$|makeRule|Makefile$" > cscope.files
+*** code commit
+hg clone ssh://zhengf@172.24.213.171//repo/zhengf/HD_R5601_FDT1356
+hg commit -m "IR ALU02330093:support insmod rdpa_mw.ko parameter of ip_class_mothed" bcm/script/bcm_drivers
+post-review --target-people=jianchep,qianqiax --bugs-closed=ALU02330093 -p
+** 2017.02.17
+hg strip -r 16153 -f
+hg rollback 只能用一次
+
+**** 修改sfu hgu
+ritool set OperatorID XXXX
+cfgcli -r
+reboot
+** 2017.02.20
+5601的repo还没有建立，我们进代码要先进到HD_R56_FDT1256代码库里面在
+
+SDK opensource
+1.	http://135.251.228.99/ext_repo/ext_repo.php
+    
+buildinfo
+http://135.251.206.106:8084/job/HDR5601_FDT1356_build_stage2/
+
+
+http://135.251.206.224:10000/repomanage/index.jsp
+
+版本名字
+3FE46346
+
+o2_3 状态
+sfptool write 0 0xa2 110 0
+sfptool write 0 0xa2 110 1
+sfptool write 0 0xa2 110 0
+
+** 2017.02.21
+每个字段的含义： 参照 附件988规范  9.3.13章节。 即可hal_dp 删创 流的代码看看。 
+
+[root@AONT: /]# omcli omciMgr showAllUpStreamFlowInfo 0
+(1023/1024/1025/1026/1027/1028/1029/1030)(portID=0x101,flowID=3,isBackup=0),Act=1,EthType=0,(FOP=15:FOV=4096)+(FIP=8:FIV=100)->(TOP=15:TOV=0)+(TIP=8:TIV=1100) CfgToSal =1,CfgPbitUnmatchRule =0
+(1039/1040/1041/1042/1043/1044/1045/1046)(portID=0x101,flowID=4,isBackup=0),Act=1,EthType=0,(FOP=15:FOV=4096)+(FIP=8:FIV=200)->(TOP=15:TOV=0)+(TIP=8:TIV=1200) CfgToSal =1,CfgPbitUnmatchRule =0
+(1039/1040/1041/1042/1043/1044/1045/1046)(portID=0x101,flowID=5,isBackup=0),Act=1,EthType=0,(FOP=8:FOV=200)+(FIP=8:FIV=4096)->(TOP=15:TOV=0)+(TIP=9:TIV=1200) CfgToSal =1,CfgPbitUnmatchRule =0
+(1055/1056/1057/1058/1059/1060/1061/1062)(portID=0x101,flowID=0,isBackup=0),Act=0,EthType=0,(FOP=15:FOV=4096)+(FIP=14:FIV=4096)->(TOP=15:TOV=0)+(TIP=8:TIV=1300) CfgToSal =1,CfgPbitUnmatchRule =0
+(1055/1056/1057/1058/1059/1060/1061/1062)(portID=0x101,flowID=1,isBackup=0),Act=0,EthType=0,(FOP=14:FOV=4096)+(FIP=14:FIV=4096)->(TOP=15:TOV=0)+(TIP=9:TIV=1300) CfgToSal =1,CfgPbitUnmatchRule =0
+(1087/1088/1089/1090/1091/1092/1093/1094)(portID=0x101,flowID=6,isBackup=0),Act=1,EthType=0,(FOP=15:FOV=4096)+(FIP=8:FIV=500)->(TOP=15:TOV=0)+(TIP=8:TIV=2500) CfgToSal =1,CfgPbitUnmatchRule =0
+(1087/1088/1089/1090/1091/1092/1093/1094)(portID=0x101,flowID=7,isBackup=0),Act=1,EthType=0,(FOP=8:FOV=500)+(FIP=8:FIV=4096)->(TOP=15:TOV=0)+(TIP=9:TIV=2500) CfgToSal =1,CfgPbitUnmatchRule =0
+(1103/1104/1105/1106/1107/1108/1109/1110)(portID=0x101,flowID=8,isBackup=0),Act=1,EthType=0,(FOP=15:FOV=4096)+(FIP=8:FIV=600)->(TOP=15:TOV=0)+(TIP=8:TIV=2600) CfgToSal =1,CfgPbitUnmatchRule =0
+(1103/1104/1105/1106/1107/1108/1109/1110)(portID=0x101,flowID=9,isBackup=0),Act=1,EthType=0,(FOP=8:FOV=600)+(FIP=8:FIV=4096)->(TOP=15:TOV=0)+(TIP=9:TIV=2600) CfgToSal =1,CfgPbitUnmatchRule =0
+(1055/-1/-1/-1/-1/-1/-1/-1)(portID=0x101,flowID=2,isBackup=0),Act=0,EthType=0,(FOP=15:FOV=4096)+(FIP=15:FIV=0)->(TOP=15:TOV=0)+(TIP=0:TIV=1300) CfgToSal =1,CfgPbitUnmatchRule =0
+
+**** 单模块编译
+1. cd sysdrivers/bcmdrv/502L02/src/
+2. make ASB_PLATFORM=brcm voip=no AONT_VOIP=n ONT_TYPE=xg250wxa TOP_DIR=`hg root`
+ (这里会将ko直接安装到fs.install下)
+3. cd build/brcm/xg250wxa/
+4. make noRemake=1 ASB_PLATFORM=brcm voip=no AONT_VOIP=n ONT_TYPE=xg250wxa
+(生成版本)
+
+编译到出版本耗时5分钟。
+
+
+
+
+
+**** oflt
+oflt phy mode show 1	显示phy状态
+** 2017.02.22
+*** ERROR start up bcm_setup.sh
+
+Initializing port... 
+ERRERR: port_attr_cfg_write#661: : status:Out of range. emac emac1 is not configured in system
+ERR: bdmf_configure#1499: : status:Out of range. config:index=lan1,cfg={emac=emac1,sal_miss_action=drop,dal_miss_action=forward},emac_cfg={emac_param={rx_flow_control=yes}}
+: bdmf_new_and_configure#423: port: config:index=lan0,cfg={emac=eERR: port_attr_cfg_write#661: : status:Out of range. emac emac2 is not configured in system
+ERR: bdmf_configure#1499: : status:Out of range. config:index=lan2,cfg={emac=emac2,sal_miss_action=drop,dal_miss_action=forward},emac_cfg={emac_param={rx_flow_control=yes}}
+mac0,sal_miss_action=drop,dal_miss_action=forward},emac_cfg={emacERR: port_attr_cfg_write#661: : status:Out of range. emac emac3 is not configured in system
+ERR: bdmf_configure#1499: : status:Out of range. config:index=lan3,cfg={emac=emac3,sal_miss_action=drop,dal_miss_action=forward},emac_cfg={emac_param={rx_flow_control=yes}}
+_param={rx_flow_control=yes}}  error:Entry already exists (-7)
+ERR: port_attr_cfg_write#687: : status:Entry already exists. emac emac4 is already configured to other port
+ERR: bdmf_configure#1499: : status:Entry already exists. config:index=lan4,cfg={emac=emac4,dal_miss_action=forward},emac_cfg={emac_param={rx_flow_control=yes}}
+# Object creation failed: Entry already exists
+MON: Bdmf/New> fERR: port_post_init#482: status:Entry already exists Port wan0 is already configured
+ailed with error code Entry already exists(-7)
+ERR: bdmf_new_and_configure#423: port: config:index=landgasp: kerSysRegisterDyingGaspHandler: dsl registered 
+1,cfg={emac=emac1,sal_miss_action=drop,dal_miss_action=forward},emac_cfg={emac_param={rx_flklpd: Unknown symbol phy_admin_state_set (err 0)
+klpd: Unknown symbol phy_admin_state_get (err 0)
+ow_control=yes}}  error:Out of range (-8)
+# Object creation failed: Out of range
+MON: Bdmf/New> failed with error code Out of range(-8)
+ERR: bdmf_new_and_configure#423: port: config:index=lan2,cfg={emac=emac2,sal_miss_action=drop,dal_miss_action=forward},emac_cfg={emac_param={rx_flow_control=yes}}  error:Out of range (-8)
+# Object creation failed: Out of range
+MON: Bdmf/New> failed with error code Out of range(-8)
+ERR: bdmf_new_and_configure#423: port: config:index=lan3,cfg={emac=emac3,sal_miss_action=drop,dal_miss_action=forward},emac_cfg={emac_param={rx_flow_control=yes}}  error:Out of range (-8)
+# Object creationBridge fastpath module
+ failed: Out of range
+MON: Bdmf/New> failed with error code Out of range(-8)
+ERR: bdmf_new_and_configure#423: porIPTV ddr base addr: 0x000000001c260000
+IPTV virtual ddr base addr: ffffff8000f81000
+t: config:index=lan4,cfg={Broadcom Packet Flow Cache HW acceleration enabled.
+emac=emac4,dal_miss_actionBroadcom Packet Flow Cache HW acceleration enabled.
+=forward},emac_cfg={emac_param={rx_flow_control=yes}}  error:Entry already exists (-7)
+# ip_tables: (C) 2000-2006 Netfilter Core Team
+Object creation failed: Entry already exists
+MON: Bdmf/New> failed with error code Entry already exists(-7)
+ERR: bdmf_new_and_configure#423: port: config:index=wan0 nf_conntrack version 0.5.0 (3595 buckets, 14380 max)
+ error:Entry already exists (-7)
+# Object creation failed: Entry already exists
+MON: Bdmf/New> failed with error code Entry already exists(-7)
+** 2017.02.23
+find . -type f |grep -v 414L04|grep -v 416L03|grep -v smarthome|grep -v voip |grep -v "apps/private/appkgs/"|grep -v "OPENSOURCE/public"|grep -v "xs/OPENSOURCE/gpl/appkgs/" |grep -E "\.cc$|\.c$|\.h$|\.mk$|makeRule|Makefile$" > cscope.files
+
+no kernel:
+find . -type f |grep -v 414L04|grep -v "kernel/linux-4.1"|grep -v 416L03|grep -v smarthome|grep -v voip |grep -v "xs/OPENSOURCE/public"|grep -v "xs/OPENSOURCE/gpl/appkgs/" |grep -E "\.cc$|\.c$|\.h$|\.mk$|makeRule|Makefile$" > cscope.files
+
+串口打印错误：
+LPORT MDIO write transaction failed or busy rc=0,fail=1,0
+pgrep omci | xargs kill -9
+** 2017.02.24
+镜像mirror：
+bs /bdmf/con port/index=wan0 mirror_cfg={rx_dst_port={port/index=lan0},tx_dst_port={port/index=lan0}}
+
+bs /b/n vlan_action/dir=us,index=1,action={cmd=push+remark,ovid=214,opbit=0,otpid=0x8100,ivid=0,ipbit=0,itpid=0x8100}
+
+bs /bdmf/new ingress_class/dir=us,index=1,cfg={type=flow,fields=ingress_port+vlan_num,prty=55,acl_mode=black,port_mask=lan0+lan1+lan2+lan3+lan4+lan5+lan6+lan7}
+
+bs /b/attr/add ingress_class/dir=us,index=1 flow string key={ingress_port=lan0,vlan_num=0},result={qos_method=flow,wan_flow=0,action=forward,policer=null,forw_mode=flow,egress_port=wan0,queue_id=0,vlan_action={vlan_action/dir=us,index=1},opbit_remark=no,opbit_val=0,ipbit_remark=no,ipbit_val=0,dscp_remark=no,dscp_val=0,pbit_to_gem_table=null,action_vec=0,service_queue_id=disable,dei=copy,trap_reason=no_trap}
+
+bs /b/attr/add ingress_class/dir=us,index=1 flow string key={ingress_port=lan0,vlan_num=1},result={qos_method=flow,wan_flow=0,action=forward,policer=null,forw_mode=flow,egress_port=wan0,queue_id=0,vlan_action={vlan_action/dir=us,index=1},opbit_remark=no,opbit_val=0,ipbit_remark=no,ipbit_val=0,dscp_remark=no,dscp_val=0,pbit_to_gem_table=null,action_vec=0,service_queue_id=disable,dei=copy,trap_reason=no_trap}
+
+bs /b/c bridge/index=1 mac[{mac=00:00:11:00:00:01}]={ports=lan0,sal_action=forward,dal_action=forward}
+bs /b/c bridge/index=1 mac[{mac=00:00:21:00:00:01}]={ports=wan0,sal_action=forward,dal_action=forward}
+
+bs /bdmf/con port/index=wan0 mirror_cfg={rx_dst_port={port/index=lan0},tx_dst_port={port/index=lan0}}
+
+bs /b/c system cfg={ic_dbg_stats=yes}
+** 2017.03.03
+Li Qipan 单编kernel
+make noRemake=1 INNER_IMG=kernel
+
+6858
+docs16130
+** 2017.03.07
+
+Pon口：show trouble-shooting statistics  channel-pair 1/1/3/2
+Nt:  show port nt-b:xfp:1
+
+https://ask.wireshark.org/questions/4843/the-npf-driver-isnt-running
+As a local administrator do this:
+net start npf
+
+omcli omciMgr showAllUpStreamFlowInfo 0
+omcli omciMgr setQosTrc 2
+** 2017.03.09
+   parameter
+/sys/module/
+
+cpu dump
+
+Packet Dump
+
+Tx Packet Dump
+bs /b/c cpu/index=host tx_dump={enable=yes}
+
+Rx Packet Dump
+bs /b/c cpu/index=host rxq_cfg[3]="<dump_data=true>"
+
+o2 o3 不对
+http://135.251.228.99/wiki/index.php/6858-o2/3
+
+*** hg strip
+当commit A之后，错误地做了pull命令，导致rollback不了commit A的正确做法：
+1. hg strip -r 『commit A的上一个commit』
+2. hg strip -r 『commit A』 —keep
+
+参考网站：
+http://stackoverflow.com/questions/4760684/mercurial-undo-last-commit
+
+phytool sm 4 0x0
+phytool sm 4 0xfff0a
+
+ phytool sm 4 0x300a 
+
+
+ typedef enum {
+    LINK_MODE_UNKNOWN = 0x0, /*indicate unknown mode*/
+    LINK_MODE_UP = BIT(1), /*status retrurn or control function*/
+    LINK_MODE_FC = BIT(2),
+    LINK_MODE_AN = BIT(3),
+    /*reserved space for link mode other setting or status*/
+    LINK_MODE_10H = BIT(8),
+    LINK_MODE_10F = BIT(9),
+    LINK_MODE_100H = BIT(10),
+    LINK_MODE_100F = BIT(11),
+    LINK_MODE_1000H = BIT(12),
+    LINK_MODE_1000F = BIT(13),
+    LINK_MODE_2500 = BIT(14),
+    LINK_MODE_5000 = BIT(15),
+    LINK_MODE_10000 = BIT(16),
+} link_mode_type; 
+
+
+
+
+LI Qipan 15:35 
+ 100M: phytool sm 4 0xc0a
+1000M: phytool sm 4 0x300a
+2.5G: phytool sm 4 0x400a
+5G: phytool sm 4 0x800a
+10G: phytool sm 4 0x1000a 
+auto: phytool sm 4 0x1ff0a
+
+
+ 其中brcm的两块ont协商到100M之前有点问题，会反复down、up，新的sdk上我还没有试过。 
+
+
+ 100M: phytool sm 4 0xc0a可以让一块ont和pc上的usb转网口去测试 
+
+ 
+**** 限速 rate limit
+没有设置限速值，默认10 
+#define ARP_RATE_LIMIT_PROTECT_CPU   10
++#define IGMP_RATE_LIMIT_PROTECT_CPU   10
+
+igmp:
+没有配置channel，不限速。
+配置channel，按OLT上的限速值限速
+configure igmp channel vlan:ng2:1/1/2/1/1:10 ?
+[no] perm-pkg-bitmap  : packages, the user is allowed to join
+[no] max-msg-rate     : Default value 0 indicates that the value is inherited
+                        from what is set in the system wide setting using
+                        command - configure qos dsl-ctrl-pkt-policer
+                        sustained-rate [1...64]  burst-size [1...128]
+                        default = 0
+没有设置限速值，默认10 
+ 
+ 
+arp:
+ 
+dhcp:
+ 
+configure equipment ont interface ng2:1/1/2 ?
+[no] ratelimit-us-dhcp: upstream rate limit for DHCP packets, unit is pps which
+                        means packets per second
+                        default = 10
+[no] ratelimit-us-arp : upstream rate limit for ARP packets, unit is pps which
+                        means packets per second
+```
